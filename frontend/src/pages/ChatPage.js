@@ -389,8 +389,8 @@ export default function ChatPage() {
                 onShare={handleShare}
                 onAudio={handleAudio}
               />
-            </ResizablePanel>
-          </ResizablePanelGroup>
+            </Panel>
+          </PanelGroup>
         )}
       </div>
 
