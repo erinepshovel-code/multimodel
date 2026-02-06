@@ -414,7 +414,7 @@ async def chat_stream(
                         yield {"event": "error", "data": json.dumps({"model": model_spec, "error": "No API key configured"})}
                         continue
                     
-                    async for chunk in stream_emergent_model(api_key, model_spec, "openai", messages_context):
+                    async for chunk in stream_emergent_model(api_key, model_spec, "openai", messages_context, conversation_id):
                         if chunk:
                             full_response += chunk
                             yield {
