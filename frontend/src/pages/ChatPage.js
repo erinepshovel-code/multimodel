@@ -532,16 +532,45 @@ export default function ChatPage() {
         </div>
         
         <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={handleExport}
-            disabled={messages.length === 0}
-            data-testid="export-btn"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size="sm"
+                variant="ghost"
+                disabled={messages.length === 0 || !conversationId}
+                data-testid="export-btn"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => handleExport('json')}>
+                <File className="h-4 w-4 mr-2" />
+                JSON
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('txt')}>
+                <FileText className="h-4 w-4 mr-2" />
+                Text
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('pdf')}>
+                <FileText className="h-4 w-4 mr-2" />
+                PDF
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          {selectedMessages.length > 0 && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleClearSelection}
+              data-testid="clear-selection-btn"
+            >
+              Clear ({selectedMessages.length})
+            </Button>
+          )}
+          
           <Button
             size="sm"
             variant="ghost"
