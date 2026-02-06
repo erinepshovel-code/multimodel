@@ -659,6 +659,45 @@ export default function ChatPage() {
           <Button
             size="sm"
             variant="ghost"
+            onClick={() => setShowBatchDialog(true)}
+            data-testid="batch-btn"
+            disabled={batchRunning}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            {batchRunning ? `Batch ${currentBatchIndex}...` : 'Batch'}
+          </Button>
+          
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setShowGlobalContext(!showGlobalContext)}
+            data-testid="context-btn"
+          >
+            🌐 Context
+          </Button>
+          
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setShowRolesDialog(true)}
+            data-testid="roles-btn"
+          >
+            🎭 Roles
+          </Button>
+          
+          <Button
+            size="sm"
+            variant={autoExport ? "default" : "ghost"}
+            onClick={() => setAutoExport(!autoExport)}
+            data-testid="auto-export-btn"
+            title="Auto-export after each prompt"
+          >
+            {autoExport ? '📥 Auto' : '📥'}
+          </Button>
+          
+          <Button
+            size="sm"
+            variant="ghost"
             onClick={handleNewChat}
             data-testid="new-chat-btn"
           >
