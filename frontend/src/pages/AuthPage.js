@@ -98,7 +98,16 @@ export default function AuthPage() {
         </CardHeader>
         
         <CardContent>
-          <Tabs defaultValue="login" className="w-full">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+            </div>
+          </div>
+          
+          <Tabs defaultValue="login" className="w-full mt-6">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="login" data-testid="login-tab">Login</TabsTrigger>
               <TabsTrigger value="register" data-testid="register-tab">Register</TabsTrigger>
