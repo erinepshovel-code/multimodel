@@ -199,6 +199,17 @@ export default function ChatPage() {
   const [showPromptHistory, setShowPromptHistory] = useState(true);
   const [messageIndexMap, setMessageIndexMap] = useState({});
   const [nextIndex, setNextIndex] = useState(1);
+  
+  // Research features
+  const [batchPrompts, setBatchPrompts] = useState('');
+  const [showBatchDialog, setShowBatchDialog] = useState(false);
+  const [batchRunning, setBatchRunning] = useState(false);
+  const [currentBatchIndex, setCurrentBatchIndex] = useState(0);
+  const [globalContext, setGlobalContext] = useState('');
+  const [showGlobalContext, setShowGlobalContext] = useState(false);
+  const [autoExport, setAutoExport] = useState(false);
+  const [modelRoles, setModelRoles] = useState({});
+  const [showRolesDialog, setShowRolesDialog] = useState(false);
 
   // Get visible models for carousel (show 2 at a time)
   const getVisibleModels = () => {
