@@ -232,10 +232,16 @@ export default function ChatPage() {
     );
   };
 
-  const handleSend = async (customMessage = null, targetModels = null) => {
-    const messageToSend = customMessage || input;
+  const handleSend = async (customMessage = null, targetModels = null, skipAutoExport = false) => {
+    let messageToSend = customMessage || input;
     if (!messageToSend.trim() || streaming) return;
     
+    // Apply global context if set
+    if (globalContext.trim()) {
+      messageToSend = `[GLOBAL CONTEXT]: ${globalContext}\n\n[PROMPT]: ${messageToSend}`;
+    }
+    
+    // Apply role-specific context to each model
     const modelsToQuery = targetModels || selectedModels.filter(m => !pausedModels[m]);
     if (modelsToQuery.length === 0) {
       toast.error('All models are paused or no models selected');
