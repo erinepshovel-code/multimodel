@@ -292,9 +292,13 @@ export default function ChatPage() {
     // Add to prompt history
     const promptIndex = nextIndex;
     setNextIndex(prev => prev + 1);
-    setPromptHistory(prev => [...prev, { index: promptIndex, content: messageToSend, timestamp: new Date() }]);
+    setPromptHistory(prev => [...prev, { index: promptIndex, content: baseMessage, timestamp: new Date() }]);
     
     setMessages(prev => [...prev, userMsg]);
+
+    // For now, use the first model's context (simplified approach)
+    // In production, you'd want to handle per-model messages differently
+    const messageToSend = buildMessageForModel(modelsToQuery[0]);
 
     try {
       const token = localStorage.getItem('token');
