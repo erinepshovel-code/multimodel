@@ -381,11 +381,9 @@ async def logout(
         response.delete_cookie(key="session_token", path="/")
     
     return {"message": "Logged out successfully"}
-            id=user["id"],
-            username=user["username"],
-            created_at=datetime.fromisoformat(user["created_at"])
-        )
-    )
+
+
+# ==================== API KEY MANAGEMENT ====================
 
 
 # ==================== API KEY MANAGEMENT ====================
