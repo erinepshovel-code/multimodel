@@ -303,7 +303,7 @@ async def stream_emergent_model(api_key: str, model: str, provider: str, message
             return
         
         # Create system message from conversation context if any
-        system_msg = ""
+        system_msg = None
         if len(messages) > 2:
             # Include previous conversation as context in system message
             context_msgs = messages[:-1]  # All except last user message
@@ -311,11 +311,18 @@ async def stream_emergent_model(api_key: str, model: str, provider: str, message
             if context:
                 system_msg = f"Previous conversation:\n{context}\n\nPlease continue the conversation naturally."
         
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=str(uuid.uuid4()),
-            system_message=system_msg
-        ).with_model(provider, model)
+        # Create chat with or without system message based on availability
+        if system_msg:
+            chat = LlmChat(
+                api_key=api_key,
+                session_id=str(uuid.uuid4()),
+                system_message=system_msg
+            ).with_model(provider, model)
+        else:
+            chat = LlmChat(
+                api_key=api_key,
+                session_id=str(uuid.uuid4())
+            ).with_model(provider, model)
         
         # Send last user message
         user_msg = UserMessage(text=user_messages[-1]["content"])
