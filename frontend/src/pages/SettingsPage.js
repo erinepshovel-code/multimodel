@@ -112,11 +112,16 @@ export default function SettingsPage() {
       await axios.put(`${API}/keys`, {
         provider,
         use_universal: enabled
+      }, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
       });
-      toast.success(enabled ? 'Using universal key' : 'Universal key disabled');
-      loadKeys();
+      toast.success(enabled ? `${API_KEY_GUIDES[provider].name} - Using universal key` : 'Universal key disabled');
+      await loadKeys(); // Reload to confirm
     } catch (error) {
-      toast.error('Failed to update key setting');
+      console.error('Toggle error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to update key setting');
     } finally {
       setLoading(false);
     }
