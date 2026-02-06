@@ -541,6 +541,56 @@ export default function ChatPage() {
     setNextIndex(1);
   };
 
+  const handleBatchRun = async () => {
+    if (!batchPrompts.trim()) {
+      toast.error('Please enter batch prompts');
+      return;
+    }
+    
+    const prompts = batchPrompts.split('\n').filter(p => p.trim());
+    if (prompts.length === 0) {
+      toast.error('No valid prompts found');
+      return;
+    }
+    
+    setBatchRunning(true);
+    setShowBatchDialog(false);
+    
+    for (let i = 0; i < prompts.length; i++) {
+      setCurrentBatchIndex(i + 1);
+      toast.info(`Running prompt ${i + 1} of ${prompts.length}`);
+      
+      await handleSend(prompts[i], null, true); // Skip auto-export for batch
+      
+      // Wait for streaming to complete
+      while (streaming) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      
+      // Delay between prompts to avoid rate limits
+      if (i < prompts.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    }
+    
+    setBatchRunning(false);
+    setCurrentBatchIndex(0);
+    
+    // Auto-export batch results
+    if (autoExport && conversationId) {
+      await handleExport('json');
+    }
+    
+    toast.success('Batch processing complete');
+  };
+
+  const handleRoleAssignment = (model, role) => {
+    setModelRoles(prev => ({
+      ...prev,
+      [model]: role
+    }));
+  };
+
   const handleToggleSelect = (messageId) => {
     setSelectedMessages(prev => 
       prev.includes(messageId)
