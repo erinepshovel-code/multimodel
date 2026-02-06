@@ -125,7 +125,7 @@ export default function ModelSelector({ selectedModels, onChange, maxModels = 6 
           <DialogHeader>
             <DialogTitle>Select AI Models</DialogTitle>
             <DialogDescription>
-              Choose up to 2 models to compare side-by-side
+              Choose up to {maxModels} models. Use carousel to view 2 at a time.
             </DialogDescription>
           </DialogHeader>
           
