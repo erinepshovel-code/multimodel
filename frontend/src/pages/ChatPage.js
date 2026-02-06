@@ -4,7 +4,7 @@ import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
-import { Settings, Send, ThumbsUp, ThumbsDown, Copy, Share2, Volume2, Plus, ChevronLeft, ChevronRight, Download, Pause, Play, Wand2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Settings, Send, ThumbsUp, ThumbsDown, Copy, Share2, Volume2, Plus, ChevronLeft, ChevronRight, Download, Pause, Play, Wand2, ChevronDown, ChevronUp, FileText, File, CheckCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ import { Checkbox } from '../components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Label } from '../components/ui/label';
 import { Separator } from '../components/ui/separator';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../components/ui/dropdown-menu';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
