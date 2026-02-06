@@ -182,10 +182,6 @@ export default function AuthPage() {
                     </Button>
                   </div>
                 </div>
-                    required
-                    className="bg-background"
-                  />
-                </div>
                 
                 <Button 
                   type="submit" 
