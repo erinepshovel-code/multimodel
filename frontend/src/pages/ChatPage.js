@@ -196,7 +196,7 @@ export default function ChatPage() {
   const [synthesisModels, setSynthesisModels] = useState([]);
   const [synthesisPrompt, setSynthesisPrompt] = useState('');
   const [promptHistory, setPromptHistory] = useState([]);
-  const [showPromptHistory, setShowPromptHistory] = useState(true);
+  const [showPromptHistory, setShowPromptHistory] = useState(false); // Hidden by default on mobile
   const [messageIndexMap, setMessageIndexMap] = useState({});
   const [nextIndex, setNextIndex] = useState(1);
   
