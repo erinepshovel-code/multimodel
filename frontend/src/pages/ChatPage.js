@@ -719,25 +719,27 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* Model Selector Bar */}
-      <div className="p-3 border-b border-border bg-[#18181B]">
-        <div className="flex items-center justify-between gap-2 flex-wrap">
-          <ModelSelector
-            selectedModels={selectedModels}
-            onChange={setSelectedModels}
-            maxModels={6}
-          />
+      {/* Model Selector Bar - Mobile Optimized */}
+      <div className="p-2 border-b border-border bg-[#18181B]">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <ModelSelector
+              selectedModels={selectedModels}
+              onChange={setSelectedModels}
+              maxModels={6}
+            />
+          </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 flex-shrink-0">
             {messages.filter(m => m.role === 'assistant').length > 0 && (
               <Button
                 size="sm"
                 variant="outline"
                 onClick={handleSelectAll}
+                className="h-8 px-2 text-xs"
                 data-testid="select-all-btn"
               >
-                <CheckCheck className="h-4 w-4 mr-2" />
-                Select All
+                <CheckCheck className="h-3 w-3" />
               </Button>
             )}
             
@@ -746,10 +748,11 @@ export default function ChatPage() {
                 size="sm"
                 variant="default"
                 onClick={() => setShowSynthesisDialog(true)}
+                className="h-8 px-2 text-xs"
                 data-testid="synthesis-btn"
               >
-                <Wand2 className="h-4 w-4 mr-2" />
-                Synthesize ({selectedMessages.length})
+                <Wand2 className="h-3 w-3 mr-1" />
+                {selectedMessages.length}
               </Button>
             )}
           </div>
