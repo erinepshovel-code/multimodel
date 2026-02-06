@@ -635,8 +635,8 @@ export default function ChatPage() {
                   messageIndexMap={messageIndexMap}
                 />
               ) : (
-                <ResizablePanelGroup direction="vertical" className="flex-1">
-                  <ResizablePanel defaultSize={50} minSize={20}>
+                <PanelGroup direction="vertical" className="flex-1">
+                  <Panel defaultSize={50} minSize={20}>
                     <ResponsePanel
                       model={visibleModels[0]}
                       messages={messages}
@@ -650,9 +650,9 @@ export default function ChatPage() {
                       onTogglePause={() => handleTogglePause(visibleModels[0])}
                       messageIndexMap={messageIndexMap}
                     />
-                  </ResizablePanel>
-                  <ResizableHandle className="h-1 bg-border hover:bg-primary/50 transition-colors" />
-                  <ResizablePanel defaultSize={50} minSize={20}>
+                  </Panel>
+                  <PanelResizeHandle className="h-1 bg-border hover:bg-primary/50 transition-colors" />
+                  <Panel defaultSize={50} minSize={20}>
                     <ResponsePanel
                       model={visibleModels[1]}
                       messages={messages}
@@ -666,8 +666,8 @@ export default function ChatPage() {
                       onTogglePause={() => handleTogglePause(visibleModels[1])}
                       messageIndexMap={messageIndexMap}
                     />
-                  </ResizablePanel>
-                </ResizablePanelGroup>
+                  </Panel>
+                </PanelGroup>
               )}
             </>
           )}
