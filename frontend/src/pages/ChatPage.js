@@ -891,31 +891,53 @@ export default function ChatPage() {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-border bg-[#18181B]">
-        <div className="flex gap-2">
-          <Textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask anything to selected AI models..."
-            className="resize-none bg-background"
-            rows={2}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            disabled={streaming}
-            data-testid="chat-input"
-          />
-          <Button
-            onClick={() => handleSend()}
-            disabled={streaming || !input.trim()}
-            className="h-full"
-            data-testid="send-btn"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+      <div className="border-t border-border bg-[#18181B]">
+        {/* Global Context (EDCM Research) */}
+        {showGlobalContext && (
+          <div className="p-3 border-b border-border">
+            <Label className="text-xs font-medium mb-2 flex items-center gap-2">
+              🌐 Global Context (Applied to all prompts for EDCM constraint analysis)
+            </Label>
+            <Textarea
+              value={globalContext}
+              onChange={(e) => setGlobalContext(e.target.value)}
+              placeholder="Enter global context constraints...&#10;Example: 'You must respond as if explaining to a 5-year-old' or 'You are constrained to use only scientific terminology'"
+              className="resize-none bg-background text-sm"
+              rows={3}
+            />
+            <div className="text-xs text-muted-foreground mt-1">
+              This context will be prepended to all prompts to study how models behave under constraints
+            </div>
+          </div>
+        )}
+        
+        {/* Main Input */}
+        <div className="p-4">
+          <div className="flex gap-2">
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask anything to selected AI models... (Shift+Enter for line break)"
+              className="resize-none bg-background"
+              rows={2}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              disabled={streaming}
+              data-testid="chat-input"
+            />
+            <Button
+              onClick={() => handleSend()}
+              disabled={streaming || !input.trim()}
+              className="h-full"
+              data-testid="send-btn"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
