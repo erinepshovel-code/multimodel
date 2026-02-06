@@ -375,34 +375,82 @@ export default function ChatPage() {
     await handleSend(synthesisMessage, synthesisModels);
   };
 
-  const handleExport = async () => {
+  const handleExport = async (format = 'json') => {
+    if (!conversationId) {
+      toast.error('No conversation to export');
+      return;
+    }
+    
     try {
-      const exportData = {
-        conversation_id: conversationId,
-        exported_at: new Date().toISOString(),
-        prompts: promptHistory,
-        messages: messages.map(m => ({
-          index: messageIndexMap[m.id] || 'N/A',
-          model: m.model,
-          role: m.role,
-          content: m.content,
-          timestamp: m.timestamp
-        }))
-      };
+      const response = await axios.get(`${API}/conversations/${conversationId}/export`, {
+        params: { format },
+        responseType: 'blob'
+      });
       
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const blob = new Blob([response.data], { 
+        type: format === 'pdf' ? 'application/pdf' : format === 'txt' ? 'text/plain' : 'application/json'
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `chat-export-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `conversation-${new Date().toISOString().split('T')[0]}.${format}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
-      toast.success('Conversation exported');
+      toast.success(`Conversation exported as ${format.toUpperCase()}`);
     } catch (error) {
+      console.error('Export error:', error);
       toast.error('Failed to export conversation');
+    }
+  };
+
+  const handleSelectAll = () => {
+    const allAssistantMsgIds = messages
+      .filter(m => m.role === 'assistant' && m.id)
+      .map(m => m.id);
+    setSelectedMessages(allAssistantMsgIds);
+    toast.success(`Selected ${allAssistantMsgIds.length} responses`);
+  };
+
+  const handleClearSelection = () => {
+    setSelectedMessages([]);
+  };
+
+  const handleCatchup = async (newModels) => {
+    if (!conversationId) {
+      toast.error('No conversation to catch up');
+      return;
+    }
+
+    try {
+      const messageIds = selectedMessages.length > 0 ? selectedMessages : undefined;
+      
+      await axios.post(`${API}/chat/catchup`, {
+        conversation_id: conversationId,
+        new_models: newModels,
+        message_ids: messageIds
+      });
+      
+      // Now send the catchup through regular chat
+      const catchupMessages = selectedMessages.length > 0 
+        ? messages.filter(m => selectedMessages.includes(m.id))
+        : messages;
+      
+      const catchupText = catchupMessages.map(m => {
+        if (m.role === 'user') return `User: ${m.content}`;
+        return `${m.model}: ${m.content}`;
+      }).join('\n\n');
+      
+      const catchupPrompt = `Here is the conversation history to catch you up:\n\n${catchupText}\n\nYou are now caught up. Please acknowledge that you understand the conversation context.`;
+      
+      await handleSend(catchupPrompt, newModels);
+      
+      toast.success(`Catching up ${newModels.length} model(s)`);
+    } catch (error) {
+      console.error('Catchup error:', error);
+      toast.error('Failed to catch up models');
     }
   };
 
