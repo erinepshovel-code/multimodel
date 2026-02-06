@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Toaster } from './components/ui/sonner';
 import AuthPage from './pages/AuthPage';
+import AuthCallback from './pages/AuthCallback';
 import ChatPage from './pages/ChatPage';
 import SettingsPage from './pages/SettingsPage';
 import './App.css';
@@ -36,6 +37,14 @@ const PublicRoute = ({ children }) => {
 };
 
 function AppRoutes() {
+  const location = useLocation();
+  
+  // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
+  // Check for session_id in URL fragment synchronously (before useEffect)
+  if (location.pathname === '/auth/callback' || location.hash?.includes('session_id=')) {
+    return <AuthCallback />;
+  }
+  
   return (
     <Routes>
       <Route
