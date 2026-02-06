@@ -367,6 +367,11 @@ export default function ChatPage() {
       // Update index counter for next batch
       setNextIndex(prev => prev + modelsToQuery.length);
       
+      // Auto-export if enabled
+      if (autoExport && !skipAutoExport && conversationId) {
+        setTimeout(() => handleExport('json'), 1000);
+      }
+      
     } catch (error) {
       console.error('Stream error:', error);
       toast.error('Failed to send message');
