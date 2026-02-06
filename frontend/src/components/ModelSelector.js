@@ -69,19 +69,18 @@ const getModelType = (model) => {
   return 'unknown';
 };
 
-export default function ModelSelector({ selectedModels, onChange }) {
+export default function ModelSelector({ selectedModels, onChange, maxModels = 6 }) {
   const [open, setOpen] = useState(false);
 
   const handleToggleModel = (model) => {
     if (selectedModels.includes(model)) {
       onChange(selectedModels.filter(m => m !== model));
     } else {
-      if (selectedModels.length >= 2) {
-        // Replace the second model
-        onChange([selectedModels[0], model]);
-      } else {
-        onChange([...selectedModels, model]);
+      if (selectedModels.length >= maxModels) {
+        toast.error(`Maximum ${maxModels} models allowed`);
+        return;
       }
+      onChange([...selectedModels, model]);
     }
   };
 
