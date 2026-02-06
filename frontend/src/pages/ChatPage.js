@@ -18,6 +18,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
+// Configure axios to send cookies
+axios.defaults.withCredentials = true;
+
 const MODEL_COLORS = {
   gpt: '#10A37F',
   claude: '#D97757',
