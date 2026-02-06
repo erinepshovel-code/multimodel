@@ -761,11 +761,11 @@ export default function ChatPage() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden flex">
-        {/* Prompt History Sidebar */}
-        <div className={`${showPromptHistory ? 'w-64' : 'w-0'} transition-all duration-200 border-r border-border bg-[#18181B] overflow-hidden`}>
+        {/* Prompt History Sidebar - Hidden by default on mobile */}
+        <div className={`${showPromptHistory ? 'w-48' : 'w-0'} transition-all duration-200 border-r border-border bg-[#18181B] overflow-hidden`}>
           <div className="h-full flex flex-col">
-            <div className="p-3 border-b border-border flex items-center justify-between">
-              <span className="text-sm font-medium">Prompts</span>
+            <div className="p-2 border-b border-border flex items-center justify-between">
+              <span className="text-xs font-medium">Prompts</span>
               <Button
                 size="sm"
                 variant="ghost"
@@ -776,10 +776,10 @@ export default function ChatPage() {
               </Button>
             </div>
             <ScrollArea className="flex-1">
-              <div className="p-2 space-y-2">
+              <div className="p-1 space-y-1">
                 {promptHistory.map((prompt, idx) => (
-                  <div key={idx} className="p-2 rounded bg-muted/50 text-xs">
-                    <Badge variant="outline" className="text-[10px] mb-1">#{prompt.index}</Badge>
+                  <div key={idx} className="p-1.5 rounded bg-muted/50 text-[10px]">
+                    <Badge variant="outline" className="text-[9px] mb-0.5">#{prompt.index}</Badge>
                     <div className="text-muted-foreground line-clamp-2">{prompt.content}</div>
                   </div>
                 ))}
@@ -794,10 +794,10 @@ export default function ChatPage() {
             size="sm"
             variant="ghost"
             onClick={() => setShowPromptHistory(true)}
-            className="absolute left-0 top-20 z-10 h-8 w-8 p-0 rounded-r"
+            className="absolute left-0 top-20 z-10 h-8 w-6 p-0 rounded-r"
             data-testid="show-prompts-btn"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-3 w-3" />
           </Button>
         )}
 
