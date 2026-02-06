@@ -11,6 +11,9 @@ import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
+// Configure axios to send cookies for authentication
+axios.defaults.withCredentials = true;
+
 const API_KEY_GUIDES = {
   gpt: {
     name: 'OpenAI GPT',
