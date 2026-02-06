@@ -646,6 +646,65 @@ async def delete_conversation(
     
     return {"message": "Conversation deleted"}
 
+class CatchupRequest(BaseModel):
+    conversation_id: str
+    new_models: List[str]
+    message_ids: Optional[List[str]] = None  # If None, use all messages
+
+@api_router.post("/chat/catchup")
+async def catchup_models(
+    request: CatchupRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Catch up new models with conversation history"""
+    # Get messages to send
+    if request.message_ids:
+        # Send only selected messages
+        messages = []
+        for msg_id in request.message_ids:
+            msg = await db.messages.find_one(
+                {"id": msg_id, "user_id": current_user["id"]},
+                {"_id": 0}
+            )
+            if msg:
+                messages.append(msg)
+        messages.sort(key=lambda x: x['timestamp'])
+    else:
+        # Send all conversation messages
+        messages = await db.messages.find(
+            {"conversation_id": request.conversation_id, "user_id": current_user["id"]},
+            {"_id": 0}
+        ).sort("timestamp", 1).to_list(1000)
+    
+    if not messages:
+        raise HTTPException(status_code=404, detail="No messages found")
+    
+    # Build catchup prompt with all messages
+    catchup_parts = ["Here is the conversation history to catch you up:\n"]
+    for msg in messages:
+        if msg['role'] == 'user':
+            catchup_parts.append(f"User: {msg['content']}")
+        elif msg['role'] == 'assistant':
+            catchup_parts.append(f"{msg['model']}: {msg['content']}")
+    
+    catchup_parts.append("\nYou are now caught up. Please acknowledge that you understand the conversation context.")
+    catchup_message = "\n\n".join(catchup_parts)
+    
+    # Send to new models using the chat stream endpoint
+    # We'll create a special ChatRequest
+    chat_request = ChatRequest(
+        message=catchup_message,
+        models=request.new_models,
+        conversation_id=request.conversation_id
+    )
+    
+    # Return success - the actual streaming will happen through the chat endpoint
+    return {
+        "message": "Catchup initiated",
+        "models": request.new_models,
+        "message_count": len(messages)
+    }
+
 
 # ==================== BASIC ROUTES ====================
 
