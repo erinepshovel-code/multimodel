@@ -248,12 +248,20 @@ export default function ChatPage() {
     setMessages(prev => [...prev, userMsg]);
 
     try {
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      
+      // Add JWT token if available (for traditional auth)
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
       const response = await fetch(`${API}/chat/stream`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+        headers: headers,
+        credentials: 'include',  // Important for cookie-based auth
         body: JSON.stringify({
           message: messageToSend,
           models: modelsToQuery,
