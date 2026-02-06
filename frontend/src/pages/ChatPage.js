@@ -1004,83 +1004,81 @@ export default function ChatPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Batch Prompts Dialog */}
+      {/* Batch Prompts Dialog - Mobile Optimized */}
       <Dialog open={showBatchDialog} onOpenChange={setShowBatchDialog}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="w-[95vw] max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>📋 Batch Prompt Processing</DialogTitle>
-            <DialogDescription>
-              Enter prompts (one per line). Each prompt will be sent to all selected models sequentially for EDCM analysis.
+            <DialogTitle className="text-base">📋 Batch Prompts</DialogTitle>
+            <DialogDescription className="text-xs">
+              One prompt per line. Sequential processing for EDCM analysis.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Textarea
               value={batchPrompts}
               onChange={(e) => setBatchPrompts(e.target.value)}
-              placeholder="Enter prompts (one per line)&#10;Example:&#10;What is consciousness?&#10;Define intelligence.&#10;Explain emergence."
-              rows={10}
-              className="font-mono text-sm"
+              placeholder="Enter prompts (one per line)&#10;Example:&#10;What is consciousness?&#10;Define intelligence."
+              rows={8}
+              className="font-mono text-xs"
             />
-            <div className="text-xs text-muted-foreground">
-              {batchPrompts.split('\n').filter(p => p.trim()).length} prompts • {selectedModels.length} models • {batchPrompts.split('\n').filter(p => p.trim()).length * selectedModels.length} total queries
+            <div className="text-[10px] text-muted-foreground">
+              {batchPrompts.split('\n').filter(p => p.trim()).length} prompts × {selectedModels.length} models = {batchPrompts.split('\n').filter(p => p.trim()).length * selectedModels.length} queries
             </div>
             
             <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => setShowBatchDialog(false)}>
+              <Button variant="outline" onClick={() => setShowBatchDialog(false)} size="sm">
                 Cancel
               </Button>
-              <Button onClick={handleBatchRun} disabled={batchRunning}>
-                <FileText className="h-4 w-4 mr-2" />
-                Run Batch
+              <Button onClick={handleBatchRun} disabled={batchRunning} size="sm">
+                <FileText className="h-3 w-3 mr-1" />
+                Run
               </Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Role Assignment Dialog */}
+      {/* Role Assignment Dialog - Mobile Optimized */}
       <Dialog open={showRolesDialog} onOpenChange={setShowRolesDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="w-[95vw] max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>🎭 Assign Model Roles (EDCM Research)</DialogTitle>
-            <DialogDescription>
-              Assign specific behavioral roles to detect dissonance patterns in constrained systems
+            <DialogTitle className="text-base">🎭 Model Roles</DialogTitle>
+            <DialogDescription className="text-xs">
+              Assign behavioral roles for EDCM dissonance testing
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div className="space-y-2 max-h-[60vh] overflow-y-auto">
             {selectedModels.map(model => (
-              <div key={model} className="space-y-2">
-                <Label className="text-xs font-medium">{model}</Label>
+              <div key={model} className="space-y-1">
+                <Label className="text-[10px] font-medium">{model}</Label>
                 <select
                   value={modelRoles[model] || 'none'}
                   onChange={(e) => handleRoleAssignment(model, e.target.value)}
-                  className="w-full p-2 rounded bg-background border border-border text-sm"
+                  className="w-full p-1.5 rounded bg-background border border-border text-xs"
                 >
                   <option value="none">No specific role</option>
-                  <option value="advocate">🗣️ Advocate (Supportive, agreeable)</option>
-                  <option value="adversarial">⚔️ Adversarial (Critical, challenging)</option>
-                  <option value="skeptic">🤔 Skeptic (Questioning, doubtful)</option>
-                  <option value="neutral">⚖️ Neutral (Balanced, objective)</option>
-                  <option value="optimist">🌟 Optimist (Positive, encouraging)</option>
-                  <option value="pessimist">🌧️ Pessimist (Cautious, risk-aware)</option>
-                  <option value="technical">🔧 Technical (Precise, detailed)</option>
-                  <option value="creative">🎨 Creative (Imaginative, unconventional)</option>
-                  <option value="socratic">❓ Socratic (Question-based, probing)</option>
-                  <option value="sycophant">😊 Sycophant (Overly agreeable)</option>
-                  <option value="contrarian">🔄 Contrarian (Oppositional)</option>
-                  <option value="oracle">🔮 Oracle (Cryptic, mysterious)</option>
+                  <option value="advocate">🗣️ Advocate</option>
+                  <option value="adversarial">⚔️ Adversarial</option>
+                  <option value="skeptic">🤔 Skeptic</option>
+                  <option value="neutral">⚖️ Neutral</option>
+                  <option value="optimist">🌟 Optimist</option>
+                  <option value="pessimist">🌧️ Pessimist</option>
+                  <option value="technical">🔧 Technical</option>
+                  <option value="creative">🎨 Creative</option>
+                  <option value="socratic">❓ Socratic</option>
+                  <option value="sycophant">😊 Sycophant</option>
+                  <option value="contrarian">🔄 Contrarian</option>
+                  <option value="oracle">🔮 Oracle</option>
                 </select>
               </div>
             ))}
           </div>
           
-          <div className="flex gap-2 justify-end">
-            <Button variant="outline" onClick={() => setShowRolesDialog(false)}>
-              Done
-            </Button>
-          </div>
+          <Button variant="outline" onClick={() => setShowRolesDialog(false)} size="sm" className="w-full">
+            Done
+          </Button>
         </DialogContent>
       </Dialog>
     </div>
