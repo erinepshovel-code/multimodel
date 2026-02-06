@@ -45,38 +45,37 @@ code {
         @apply border-border;
     }
     body {
-        @apply bg-background text-foreground;
+        @apply bg-[#09090B] text-foreground;
     }
 }
 
-@layer base {
-    [data-debug-wrapper="true"] {
-        display: contents !important;
+@layer utilities {
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
     }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
 
-    [data-debug-wrapper="true"] > * {
-        margin-left: inherit;
-        margin-right: inherit;
-        margin-top: inherit;
-        margin-bottom: inherit;
-        padding-left: inherit;
-        padding-right: inherit;
-        padding-top: inherit;
-        padding-bottom: inherit;
-        column-gap: inherit;
-        row-gap: inherit;
-        gap: inherit;
-        border-left-width: inherit;
-        border-right-width: inherit;
-        border-top-width: inherit;
-        border-bottom-width: inherit;
-        border-left-style: inherit;
-        border-right-style: inherit;
-        border-top-style: inherit;
-        border-bottom-style: inherit;
-        border-left-color: inherit;
-        border-right-color: inherit;
-        border-top-color: inherit;
-        border-bottom-color: inherit;
+@layer components {
+    .model-badge-gpt {
+        @apply border-[#10A37F] text-[#10A37F];
+    }
+    .model-badge-claude {
+        @apply border-[#D97757] text-[#D97757];
+    }
+    .model-badge-gemini {
+        @apply border-[#4285F4] text-[#4285F4];
+    }
+    .model-badge-perplexity {
+        @apply border-[#22B8CF] text-[#22B8CF];
+    }
+    .model-badge-grok {
+        @apply border-white text-white;
+    }
+    .model-badge-deepseek {
+        @apply border-[#4D6BFE] text-[#4D6BFE];
     }
 }
