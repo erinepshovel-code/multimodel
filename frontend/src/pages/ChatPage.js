@@ -4,12 +4,15 @@ import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
-import { Settings, Send, ThumbsUp, ThumbsDown, Copy, Share2, Volume2, Menu, Plus } from 'lucide-react';
+import { Settings, Send, ThumbsUp, ThumbsDown, Copy, Share2, Volume2, Menu, Plus, ChevronLeft, ChevronRight, Download, Pause, Play, CheckSquare, Square, Wand2, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ModelSelector from '../components/ModelSelector';
 import { Badge } from '../components/ui/badge';
+import { Checkbox } from '../components/ui/checkbox';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { Label } from '../components/ui/label';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
