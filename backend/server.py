@@ -296,17 +296,26 @@ async def stream_openai_compatible(base_url: str, api_key: str, model: str, mess
 async def stream_emergent_model(api_key: str, model: str, provider: str, messages: List[dict]):
     """Stream from Emergent-supported models (GPT, Claude, Gemini)"""
     try:
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=str(uuid.uuid4()),
-            system_message=messages[0]["content"] if messages and messages[0]["role"] == "system" else ""
-        ).with_model(provider, model)
-        
-        # Get only user messages (exclude system)
+        # Filter to only get the last user message
         user_messages = [msg for msg in messages if msg["role"] == "user"]
         if not user_messages:
             yield json.dumps({"error": "No user messages found"})
             return
+        
+        # Create system message from conversation context if any
+        system_msg = ""
+        if len(messages) > 2:
+            # Include previous conversation as context in system message
+            context_msgs = messages[:-1]  # All except last user message
+            context = "\n".join([f"{m['role']}: {m['content']}" for m in context_msgs if m['role'] != 'system'])
+            if context:
+                system_msg = f"Previous conversation:\n{context}\n\nPlease continue the conversation naturally."
+        
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=str(uuid.uuid4()),
+            system_message=system_msg
+        ).with_model(provider, model)
         
         # Send last user message
         user_msg = UserMessage(text=user_messages[-1]["content"])
