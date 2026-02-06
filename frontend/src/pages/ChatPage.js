@@ -233,15 +233,9 @@ export default function ChatPage() {
   };
 
   const handleSend = async (customMessage = null, targetModels = null, skipAutoExport = false) => {
-    let messageToSend = customMessage || input;
-    if (!messageToSend.trim() || streaming) return;
+    let baseMessage = customMessage || input;
+    if (!baseMessage.trim() || streaming) return;
     
-    // Apply global context if set
-    if (globalContext.trim()) {
-      messageToSend = `[GLOBAL CONTEXT]: ${globalContext}\n\n[PROMPT]: ${messageToSend}`;
-    }
-    
-    // Apply role-specific context to each model
     const modelsToQuery = targetModels || selectedModels.filter(m => !pausedModels[m]);
     if (modelsToQuery.length === 0) {
       toast.error('All models are paused or no models selected');
@@ -251,11 +245,46 @@ export default function ChatPage() {
     if (!customMessage) setInput('');
     setStreaming(true);
 
-    // Add user message with index
+    // Build message with context and roles for each model
+    const buildMessageForModel = (model) => {
+      let message = '';
+      
+      // Add role context if assigned
+      const role = modelRoles[model];
+      if (role && role !== 'none') {
+        const roleInstructions = {
+          'advocate': 'You must respond as a supportive advocate. Be agreeable and emphasize positive aspects.',
+          'adversarial': 'You must respond as a critical adversary. Challenge assumptions and present counterarguments.',
+          'skeptic': 'You must respond as a skeptic. Question claims and demand evidence.',
+          'neutral': 'You must respond with complete objectivity and balance.',
+          'optimist': 'You must respond with optimism. Focus on opportunities and positive outcomes.',
+          'pessimist': 'You must respond cautiously, emphasizing risks and potential problems.',
+          'technical': 'You must respond with technical precision and detailed accuracy.',
+          'creative': 'You must respond imaginatively and unconventionally.',
+          'socratic': 'You must respond by asking probing questions, not providing direct answers.',
+          'sycophant': 'You must respond with excessive agreement and flattery.',
+          'contrarian': 'You must respond by taking the opposite position.',
+          'oracle': 'You must respond cryptically and mysteriously.',
+        };
+        message += `[ROLE CONSTRAINT]: ${roleInstructions[role]}\n\n`;
+      }
+      
+      // Add global context
+      if (globalContext.trim()) {
+        message += `[GLOBAL CONTEXT]: ${globalContext}\n\n`;
+      }
+      
+      // Add the actual prompt
+      message += `[PROMPT]: ${baseMessage}`;
+      
+      return message;
+    };
+
+    // Store the base message for display
     const userMsg = {
       id: `user-${Date.now()}`,
       role: 'user',
-      content: messageToSend,
+      content: baseMessage,  // Display only the base message
       model: 'user',
       timestamp: new Date()
     };
