@@ -293,7 +293,7 @@ async def stream_openai_compatible(base_url: str, api_key: str, model: str, mess
         except Exception as e:
             yield json.dumps({"error": str(e)})
 
-async def stream_emergent_model(api_key: str, model: str, provider: str, messages: List[dict]):
+async def stream_emergent_model(api_key: str, model: str, provider: str, messages: List[dict], conversation_id: str):
     """Stream from Emergent-supported models (GPT, Claude, Gemini)"""
     try:
         # Filter to only get the last user message
@@ -302,19 +302,34 @@ async def stream_emergent_model(api_key: str, model: str, provider: str, message
             yield json.dumps({"error": "No user messages found"})
             return
         
-        # Create system message from conversation context if any  
-        system_msg = "You are a helpful AI assistant."
-        if len(messages) > 2:
-            # Include previous conversation as context in system message
-            context_msgs = messages[:-1]  # All except last user message
-            context = "\n".join([f"{m['role']}: {m['content']}" for m in context_msgs if m['role'] != 'system'])
-            if context:
-                system_msg = f"You are a helpful AI assistant. Previous conversation:\n{context}\n\nPlease continue the conversation naturally."
+        # Build conversation history for context
+        # Include recent conversation (last 10 messages) as context
+        conversation_history = ""
+        if len(messages) > 1:
+            # Get all messages except the last user message
+            prev_messages = messages[:-1]
+            history_parts = []
+            for msg in prev_messages[-10:]:  # Last 10 messages for context
+                if msg['role'] == 'user':
+                    history_parts.append(f"User: {msg['content']}")
+                elif msg['role'] == 'assistant':
+                    history_parts.append(f"Assistant: {msg['content']}")
+            
+            if history_parts:
+                conversation_history = "\n".join(history_parts)
         
-        # Create chat with system message
+        # Create system message with conversation context
+        system_msg = "You are a helpful AI assistant."
+        if conversation_history:
+            system_msg = f"You are a helpful AI assistant. Continue this conversation naturally.\n\nPrevious conversation:\n{conversation_history}"
+        
+        # Use conversation_id as session_id for context persistence
+        session_id = f"{conversation_id}-{model}" if conversation_id else str(uuid.uuid4())
+        
+        # Create chat with system message and persistent session
         chat = LlmChat(
             api_key=api_key,
-            session_id=str(uuid.uuid4()),
+            session_id=session_id,
             system_message=system_msg
         ).with_model(provider, model)
         
