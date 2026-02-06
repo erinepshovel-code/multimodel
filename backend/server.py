@@ -302,27 +302,21 @@ async def stream_emergent_model(api_key: str, model: str, provider: str, message
             yield json.dumps({"error": "No user messages found"})
             return
         
-        # Create system message from conversation context if any
-        system_msg = None
+        # Create system message from conversation context if any  
+        system_msg = "You are a helpful AI assistant."
         if len(messages) > 2:
             # Include previous conversation as context in system message
             context_msgs = messages[:-1]  # All except last user message
             context = "\n".join([f"{m['role']}: {m['content']}" for m in context_msgs if m['role'] != 'system'])
             if context:
-                system_msg = f"Previous conversation:\n{context}\n\nPlease continue the conversation naturally."
+                system_msg = f"You are a helpful AI assistant. Previous conversation:\n{context}\n\nPlease continue the conversation naturally."
         
-        # Create chat with or without system message based on availability
-        if system_msg:
-            chat = LlmChat(
-                api_key=api_key,
-                session_id=str(uuid.uuid4()),
-                system_message=system_msg
-            ).with_model(provider, model)
-        else:
-            chat = LlmChat(
-                api_key=api_key,
-                session_id=str(uuid.uuid4())
-            ).with_model(provider, model)
+        # Create chat with system message
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=str(uuid.uuid4()),
+            system_message=system_msg
+        ).with_model(provider, model)
         
         # Send last user message
         user_msg = UserMessage(text=user_messages[-1]["content"])
