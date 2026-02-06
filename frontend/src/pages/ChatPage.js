@@ -378,9 +378,9 @@ export default function ChatPage() {
                 onShare={handleShare}
                 onAudio={handleAudio}
               />
-            </ResizablePanel>
-            <ResizableHandle className="h-1 bg-border hover:bg-primary/50 transition-colors" />
-            <ResizablePanel defaultSize={50} minSize={20}>
+            </Panel>
+            <PanelResizeHandle className="h-1 bg-border hover:bg-primary/50 transition-colors" />
+            <Panel defaultSize={50} minSize={20}>
               <ResponsePanel
                 model={selectedModels[1]}
                 messages={messages}
