@@ -67,11 +67,8 @@ export default function SettingsPage() {
 
   const loadKeys = async () => {
     try {
-      const response = await axios.get(`${API}/keys`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      // Don't add Authorization header - let axios use cookies automatically
+      const response = await axios.get(`${API}/keys`);
       const loadedKeys = response.data;
       setKeys(loadedKeys);
       
