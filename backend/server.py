@@ -396,6 +396,9 @@ async def logout(
 async def update_api_key(key_data: APIKeyUpdate, current_user: dict = Depends(get_current_user)):
     user_id = get_user_id(current_user)
     
+    # Build query that works for both 'id' and 'user_id' fields
+    query = {"$or": [{"id": user_id}, {"user_id": user_id}]}
+    
     update_data = {}
     if key_data.use_universal:
         update_data[f"api_keys.{key_data.provider}"] = "UNIVERSAL"
@@ -404,15 +407,18 @@ async def update_api_key(key_data: APIKeyUpdate, current_user: dict = Depends(ge
     else:
         # Remove key
         await db.users.update_one(
-            {"id": user_id},
+            query,
             {"$unset": {f"api_keys.{key_data.provider}": ""}}
         )
         return {"message": "API key removed"}
     
-    await db.users.update_one(
-        {"id": user_id},
+    result = await db.users.update_one(
+        query,
         {"$set": update_data}
     )
+    
+    if result.modified_count == 0:
+        logger.warning(f"No user updated for user_id: {user_id}")
     
     return {"message": "API key updated"}
 
