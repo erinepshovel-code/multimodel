@@ -67,7 +67,11 @@ export default function SettingsPage() {
 
   const loadKeys = async () => {
     try {
-      const response = await axios.get(`${API}/keys`);
+      const response = await axios.get(`${API}/keys`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       const loadedKeys = response.data;
       setKeys(loadedKeys);
       
@@ -78,7 +82,8 @@ export default function SettingsPage() {
       });
       setUseUniversal(universalFlags);
     } catch (error) {
-      toast.error('Failed to load API keys');
+      console.error('Load keys error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to load API keys. Please login again.');
     }
   };
 
