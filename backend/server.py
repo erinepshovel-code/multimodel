@@ -196,6 +196,10 @@ async def get_current_user(
     
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
+def get_user_id(user: dict) -> str:
+    """Get user ID from user dict (supports both old 'id' and new 'user_id' fields)"""
+    return user.get("user_id") or user.get("id")
+
 
 # ==================== AUTH ROUTES ====================
 
