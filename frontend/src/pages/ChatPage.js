@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import { ScrollArea } from '../components/ui/scroll-area';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from 'react-resizable-panels';
+import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 import { Settings, Send, ThumbsUp, ThumbsDown, Copy, Share2, Volume2, Plus, ChevronLeft, ChevronRight, Download, Pause, Play, Wand2, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
