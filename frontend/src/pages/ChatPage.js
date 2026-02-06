@@ -368,8 +368,8 @@ export default function ChatPage() {
             onAudio={handleAudio}
           />
         ) : (
-          <ResizablePanelGroup direction="vertical">
-            <ResizablePanel defaultSize={50} minSize={20}>
+          <PanelGroup direction="vertical">
+            <Panel defaultSize={50} minSize={20}>
               <ResponsePanel
                 model={selectedModels[0]}
                 messages={messages}
