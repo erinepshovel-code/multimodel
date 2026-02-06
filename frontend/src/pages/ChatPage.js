@@ -982,6 +982,86 @@ export default function ChatPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Batch Prompts Dialog */}
+      <Dialog open={showBatchDialog} onOpenChange={setShowBatchDialog}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>📋 Batch Prompt Processing</DialogTitle>
+            <DialogDescription>
+              Enter prompts (one per line). Each prompt will be sent to all selected models sequentially for EDCM analysis.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <Textarea
+              value={batchPrompts}
+              onChange={(e) => setBatchPrompts(e.target.value)}
+              placeholder="Enter prompts (one per line)&#10;Example:&#10;What is consciousness?&#10;Define intelligence.&#10;Explain emergence."
+              rows={10}
+              className="font-mono text-sm"
+            />
+            <div className="text-xs text-muted-foreground">
+              {batchPrompts.split('\n').filter(p => p.trim()).length} prompts • {selectedModels.length} models • {batchPrompts.split('\n').filter(p => p.trim()).length * selectedModels.length} total queries
+            </div>
+            
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setShowBatchDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleBatchRun} disabled={batchRunning}>
+                <FileText className="h-4 w-4 mr-2" />
+                Run Batch
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Role Assignment Dialog */}
+      <Dialog open={showRolesDialog} onOpenChange={setShowRolesDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>🎭 Assign Model Roles (EDCM Research)</DialogTitle>
+            <DialogDescription>
+              Assign specific behavioral roles to detect dissonance patterns in constrained systems
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {selectedModels.map(model => (
+              <div key={model} className="space-y-2">
+                <Label className="text-xs font-medium">{model}</Label>
+                <select
+                  value={modelRoles[model] || 'none'}
+                  onChange={(e) => handleRoleAssignment(model, e.target.value)}
+                  className="w-full p-2 rounded bg-background border border-border text-sm"
+                >
+                  <option value="none">No specific role</option>
+                  <option value="advocate">🗣️ Advocate (Supportive, agreeable)</option>
+                  <option value="adversarial">⚔️ Adversarial (Critical, challenging)</option>
+                  <option value="skeptic">🤔 Skeptic (Questioning, doubtful)</option>
+                  <option value="neutral">⚖️ Neutral (Balanced, objective)</option>
+                  <option value="optimist">🌟 Optimist (Positive, encouraging)</option>
+                  <option value="pessimist">🌧️ Pessimist (Cautious, risk-aware)</option>
+                  <option value="technical">🔧 Technical (Precise, detailed)</option>
+                  <option value="creative">🎨 Creative (Imaginative, unconventional)</option>
+                  <option value="socratic">❓ Socratic (Question-based, probing)</option>
+                  <option value="sycophant">😊 Sycophant (Overly agreeable)</option>
+                  <option value="contrarian">🔄 Contrarian (Oppositional)</option>
+                  <option value="oracle">🔮 Oracle (Cryptic, mysterious)</option>
+                </select>
+              </div>
+            ))}
+          </div>
+          
+          <div className="flex gap-2 justify-end">
+            <Button variant="outline" onClick={() => setShowRolesDialog(false)}>
+              Done
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
