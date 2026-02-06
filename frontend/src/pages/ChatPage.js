@@ -643,116 +643,79 @@ export default function ChatPage() {
 
   return (
     <div className="h-screen flex flex-col bg-background">
-      {/* Top Bar */}
-      <div className="h-14 border-b border-border flex items-center justify-between px-4 bg-[#18181B]">
-        <div className="flex items-center gap-2">
-          <h1 className="text-lg font-bold" style={{ fontFamily: 'Manrope, sans-serif' }}>Multi-AI Hub</h1>
-        </div>
+      {/* Top Bar - Mobile Optimized */}
+      <div className="h-14 border-b border-border flex items-center justify-between px-2 bg-[#18181B]">
+        <h1 className="text-sm font-bold truncate" style={{ fontFamily: 'Manrope, sans-serif' }}>Multi-AI Hub</h1>
         
-        <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                size="sm"
-                variant="ghost"
-                disabled={messages.length === 0 || !conversationId}
-                data-testid="export-btn"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => handleExport('json')}>
-                <File className="h-4 w-4 mr-2" />
-                JSON
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport('txt')}>
-                <FileText className="h-4 w-4 mr-2" />
-                Text
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport('pdf')}>
-                <FileText className="h-4 w-4 mr-2" />
-                PDF
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          
-          {selectedMessages.length > 0 && (
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handleClearSelection}
-              data-testid="clear-selection-btn"
-            >
-              Clear ({selectedMessages.length})
-            </Button>
-          )}
-          
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => setShowBatchDialog(true)}
-            data-testid="batch-btn"
-            disabled={batchRunning}
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            {batchRunning ? `Batch ${currentBatchIndex}...` : 'Batch'}
-          </Button>
-          
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => setShowGlobalContext(!showGlobalContext)}
-            data-testid="context-btn"
-          >
-            🌐 Context
-          </Button>
-          
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => setShowRolesDialog(true)}
-            data-testid="roles-btn"
-          >
-            🎭 Roles
-          </Button>
-          
+        <div className="flex items-center gap-1">
+          {/* Primary actions */}
           <Button
             size="sm"
             variant={autoExport ? "default" : "ghost"}
             onClick={() => setAutoExport(!autoExport)}
+            className="h-8 w-8 p-0"
             data-testid="auto-export-btn"
             title="Auto-export after each prompt"
           >
-            {autoExport ? '📥 Auto' : '📥'}
+            {autoExport ? '📥' : '📤'}
           </Button>
           
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={handleNewChat}
-            data-testid="new-chat-btn"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => navigate('/settings')}
-            data-testid="settings-btn"
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={logout}
-            data-testid="logout-btn"
-          >
-            Logout
-          </Button>
+          {/* More menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                <Menu className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={() => setShowBatchDialog(true)} disabled={batchRunning}>
+                <FileText className="h-4 w-4 mr-2" />
+                {batchRunning ? `Batch ${currentBatchIndex}...` : 'Batch Prompts'}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowGlobalContext(!showGlobalContext)}>
+                🌐 Global Context
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowRolesDialog(true)}>
+                🎭 Assign Roles
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleNewChat}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Chat
+              </DropdownMenuItem>
+              
+              {/* Export submenu */}
+              {conversationId && messages.length > 0 && (
+                <>
+                  <DropdownMenuItem onClick={() => handleExport('json')}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export JSON
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleExport('txt')}>
+                    <FileText className="h-4 w-4 mr-2" />
+                    Export TXT
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleExport('pdf')}>
+                    <File className="h-4 w-4 mr-2" />
+                    Export PDF
+                  </DropdownMenuItem>
+                </>
+              )}
+              
+              {selectedMessages.length > 0 && (
+                <DropdownMenuItem onClick={handleClearSelection}>
+                  Clear Selection ({selectedMessages.length})
+                </DropdownMenuItem>
+              )}
+              
+              <DropdownMenuItem onClick={() => navigate('/settings')}>
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={logout}>
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
