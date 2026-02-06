@@ -28,6 +28,7 @@ const MODEL_COLORS = {
 };
 
 const getModelColor = (model) => {
+  if (!model) return '#FFFFFF';
   const lower = model.toLowerCase();
   for (const [key, color] of Object.entries(MODEL_COLORS)) {
     if (lower.includes(key)) return color;
@@ -36,6 +37,7 @@ const getModelColor = (model) => {
 };
 
 const getModelType = (model) => {
+  if (!model) return 'unknown';
   const lower = model.toLowerCase();
   if (lower.includes('gpt') || lower.startsWith('o')) return 'gpt';
   if (lower.includes('claude')) return 'claude';
