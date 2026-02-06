@@ -87,6 +87,7 @@ export default function SettingsPage() {
   const handleSaveKey = async (provider) => {
     setLoading(true);
     try {
+      // Don't add Authorization header - let axios use cookies automatically
       await axios.put(`${API}/keys`, {
         provider,
         api_key: keyInput,
@@ -105,20 +106,37 @@ export default function SettingsPage() {
 
   const handleToggleUniversal = async (provider, enabled) => {
     setLoading(true);
+    
+    // Optimistically update UI
+    setUseUniversal(prev => ({
+      ...prev,
+      [provider]: enabled
+    }));
+    
     try {
+      // Don't add Authorization header - let axios use cookies automatically
       await axios.put(`${API}/keys`, {
         provider,
         use_universal: enabled
-      }, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
       });
-      toast.success(enabled ? `${API_KEY_GUIDES[provider].name} - Using universal key` : 'Universal key disabled');
-      await loadKeys(); // Reload to confirm
+      
+      toast.success(
+        enabled 
+          ? `✓ ${API_KEY_GUIDES[provider].name} - Using universal key` 
+          : `${API_KEY_GUIDES[provider].name} - Universal key disabled`
+      );
+      
+      // Reload to confirm from server
+      await loadKeys();
     } catch (error) {
       console.error('Toggle error:', error);
       toast.error(error.response?.data?.detail || 'Failed to update key setting');
+      
+      // Revert optimistic update on error
+      setUseUniversal(prev => ({
+        ...prev,
+        [provider]: !enabled
+      }));
     } finally {
       setLoading(false);
     }
