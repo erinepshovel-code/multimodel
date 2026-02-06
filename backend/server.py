@@ -394,7 +394,7 @@ async def logout(
 
 @api_router.put("/keys")
 async def update_api_key(key_data: APIKeyUpdate, current_user: dict = Depends(get_current_user)):
-    user_id = current_user["id"]
+    user_id = get_user_id(current_user)
     
     update_data = {}
     if key_data.use_universal:
@@ -559,13 +559,13 @@ async def chat_stream(
             "content": request.message,
             "model": "user",
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "user_id": current_user["id"]
+            "user_id": get_user_id(current_user)
         }
         await db.messages.insert_one(user_msg)
         
         # Get conversation history for context
         history = await db.messages.find(
-            {"conversation_id": conversation_id, "user_id": current_user["id"]},
+            {"conversation_id": conversation_id, "user_id": get_user_id(current_user)},
             {"_id": 0}
         ).sort("timestamp", 1).limit(10).to_list(10)
         
@@ -733,7 +733,7 @@ async def chat_stream(
                     "content": full_response,
                     "model": model_spec,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
-                    "user_id": current_user["id"],
+                    "user_id": get_user_id(current_user),
                     "feedback": None
                 }
                 await db.messages.insert_one(assistant_msg)
@@ -767,7 +767,7 @@ async def chat_stream(
                 },
                 "$setOnInsert": {
                     "id": conversation_id,
-                    "user_id": current_user["id"],
+                    "user_id": get_user_id(current_user),
                     "created_at": datetime.now(timezone.utc).isoformat()
                 }
             },
@@ -783,7 +783,7 @@ async def submit_feedback(
 ):
     """Submit thumbs up/down feedback for a message"""
     result = await db.messages.update_one(
-        {"id": feedback.message_id, "user_id": current_user["id"]},
+        {"id": feedback.message_id, "user_id": get_user_id(current_user)},
         {"$set": {"feedback": feedback.feedback}}
     )
     
@@ -796,7 +796,7 @@ async def submit_feedback(
 async def get_conversations(current_user: dict = Depends(get_current_user)):
     """Get user's conversation history"""
     conversations = await db.conversations.find(
-        {"user_id": current_user["id"]},
+        {"user_id": get_user_id(current_user)},
         {"_id": 0}
     ).sort("updated_at", -1).limit(50).to_list(50)
     
@@ -818,7 +818,7 @@ async def get_conversation_messages(
 ):
     """Get messages from a conversation"""
     messages = await db.messages.find(
-        {"conversation_id": conversation_id, "user_id": current_user["id"]},
+        {"conversation_id": conversation_id, "user_id": get_user_id(current_user)},
         {"_id": 0}
     ).sort("timestamp", 1).to_list(1000)
     
@@ -830,8 +830,8 @@ async def delete_conversation(
     current_user: dict = Depends(get_current_user)
 ):
     """Delete a conversation and its messages"""
-    await db.conversations.delete_one({"id": conversation_id, "user_id": current_user["id"]})
-    await db.messages.delete_many({"conversation_id": conversation_id, "user_id": current_user["id"]})
+    await db.conversations.delete_one({"id": conversation_id, "user_id": get_user_id(current_user)})
+    await db.messages.delete_many({"conversation_id": conversation_id, "user_id": get_user_id(current_user)})
     
     return {"message": "Conversation deleted"}
 
@@ -852,7 +852,7 @@ async def catchup_models(
         messages = []
         for msg_id in request.message_ids:
             msg = await db.messages.find_one(
-                {"id": msg_id, "user_id": current_user["id"]},
+                {"id": msg_id, "user_id": get_user_id(current_user)},
                 {"_id": 0}
             )
             if msg:
@@ -861,7 +861,7 @@ async def catchup_models(
     else:
         # Send all conversation messages
         messages = await db.messages.find(
-            {"conversation_id": request.conversation_id, "user_id": current_user["id"]},
+            {"conversation_id": request.conversation_id, "user_id": get_user_id(current_user)},
             {"_id": 0}
         ).sort("timestamp", 1).to_list(1000)
     
@@ -904,7 +904,7 @@ async def export_conversation(
     """Export conversation in different formats"""
     # Get conversation messages
     messages = await db.messages.find(
-        {"conversation_id": conversation_id, "user_id": current_user["id"]},
+        {"conversation_id": conversation_id, "user_id": get_user_id(current_user)},
         {"_id": 0}
     ).sort("timestamp", 1).to_list(1000)
     
@@ -913,7 +913,7 @@ async def export_conversation(
     
     # Get conversation details
     conversation = await db.conversations.find_one(
-        {"id": conversation_id, "user_id": current_user["id"]},
+        {"id": conversation_id, "user_id": get_user_id(current_user)},
         {"_id": 0}
     )
     
