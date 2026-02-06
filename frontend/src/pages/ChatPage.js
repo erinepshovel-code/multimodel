@@ -889,35 +889,32 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* Input Area */}
+      {/* Input Area - Mobile Optimized */}
       <div className="border-t border-border bg-[#18181B]">
         {/* Global Context (EDCM Research) */}
         {showGlobalContext && (
-          <div className="p-3 border-b border-border">
-            <Label className="text-xs font-medium mb-2 flex items-center gap-2">
-              🌐 Global Context (Applied to all prompts for EDCM constraint analysis)
+          <div className="p-2 border-b border-border">
+            <Label className="text-[10px] font-medium mb-1 flex items-center gap-1">
+              🌐 Global Context
             </Label>
             <Textarea
               value={globalContext}
               onChange={(e) => setGlobalContext(e.target.value)}
-              placeholder="Enter global context constraints...&#10;Example: 'You must respond as if explaining to a 5-year-old' or 'You are constrained to use only scientific terminology'"
-              className="resize-none bg-background text-sm"
-              rows={3}
+              placeholder="Enter global context constraints for EDCM analysis..."
+              className="resize-none bg-background text-xs"
+              rows={2}
             />
-            <div className="text-xs text-muted-foreground mt-1">
-              This context will be prepended to all prompts to study how models behave under constraints
-            </div>
           </div>
         )}
         
         {/* Main Input */}
-        <div className="p-4">
-          <div className="flex gap-2">
+        <div className="p-2">
+          <div className="flex gap-1">
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask anything to selected AI models... (Shift+Enter for line break)"
-              className="resize-none bg-background"
+              placeholder="Ask anything... (Shift+Enter for new line)"
+              className="resize-none bg-background text-sm"
               rows={2}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -931,7 +928,7 @@ export default function ChatPage() {
             <Button
               onClick={() => handleSend()}
               disabled={streaming || !input.trim()}
-              className="h-full"
+              className="h-full px-3"
               data-testid="send-btn"
             >
               <Send className="h-4 w-4" />
