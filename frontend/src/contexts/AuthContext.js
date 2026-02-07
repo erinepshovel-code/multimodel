@@ -22,9 +22,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check authentication on mount
+  // Check authentication on mount and window focus
   useEffect(() => {
     checkAuth();
+    
+    // Re-check auth when window gains focus
+    const handleFocus = () => {
+      checkAuth();
+    };
+    
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   const checkAuth = async () => {
@@ -48,8 +56,10 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
       }
     } catch (error) {
-      // Not authenticated
-      setIsAuthenticated(false);
+      // Not authenticated - but don't clear if we're just checking
+      if (error.response?.status === 401) {
+        setIsAuthenticated(false);
+      }
     } finally {
       setLoading(false);
     }
