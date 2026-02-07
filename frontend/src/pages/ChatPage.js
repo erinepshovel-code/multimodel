@@ -169,6 +169,16 @@ const ResponsePanel = ({ model, messages, onFeedback, onCopy, onShare, onAudio, 
                       >
                         <Share2 className="h-3 w-3" />
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => onSaveThread(model)}
+                        className="h-7 px-2"
+                        title="Save this model's thread"
+                        data-testid={`save-thread-btn-${model}`}
+                      >
+                        <Download className="h-3 w-3" />
+                      </Button>
                     </div>
                   )}
                 </div>
