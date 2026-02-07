@@ -244,6 +244,12 @@ export default function ChatPage() {
     
     if (!customMessage) setInput('');
     setStreaming(true);
+    
+    // Generate or use existing conversation ID
+    const currentConvId = conversationId || `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    if (!conversationId) {
+      setConversationId(currentConvId);
+    }
 
     // Build message with context and roles for each model
     const buildMessageForModel = (model) => {
