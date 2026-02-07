@@ -640,6 +640,46 @@ export default function ChatPage() {
     }));
   };
 
+  const handleSaveThread = (model) => {
+    try {
+      // Get all messages for this specific model
+      const modelMessages = messages.filter(m => m.model === model || m.model === 'user');
+      
+      if (modelMessages.length === 0) {
+        toast.error('No messages to save');
+        return;
+      }
+      
+      // Create export data
+      const threadData = {
+        model: model,
+        exported_at: new Date().toISOString(),
+        message_count: modelMessages.length,
+        messages: modelMessages.map(m => ({
+          index: messageIndexMap[m.id] || 'N/A',
+          role: m.role,
+          content: m.content,
+          timestamp: m.timestamp
+        }))
+      };
+      
+      // Download as JSON
+      const blob = new Blob([JSON.stringify(threadData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${model.replace(/[^a-z0-9]/gi, '_')}-thread-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast.success(`${model} thread saved`);
+    } catch (error) {
+      toast.error('Failed to save thread');
+    }
+  };
+
   const handleToggleSelect = (messageId) => {
     setSelectedMessages(prev => 
       prev.includes(messageId)
