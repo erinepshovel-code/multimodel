@@ -904,6 +904,7 @@ export default function ChatPage() {
                   isPaused={pausedModels[visibleModels[0]]}
                   onTogglePause={() => handleTogglePause(visibleModels[0])}
                   messageIndexMap={messageIndexMap}
+                  onSaveThread={handleSaveThread}
                 />
               ) : (
                 <PanelGroup direction="vertical" className="flex-1">
