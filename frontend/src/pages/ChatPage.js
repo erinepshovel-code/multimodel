@@ -916,29 +916,44 @@ export default function ChatPage() {
         {/* Main Input */}
         <div className="p-2">
           <div className="flex gap-1">
-            <Textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask anything... (Shift+Enter for new line)"
-              className="resize-none bg-background text-sm"
-              rows={2}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              disabled={streaming}
-              data-testid="chat-input"
-            />
-            <Button
-              onClick={() => handleSend()}
-              disabled={streaming || !input.trim()}
-              className="h-full px-3"
-              data-testid="send-btn"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
+            <div className="flex-1 flex flex-col gap-1">
+              <Textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask anything..."
+                className="resize-none bg-background text-sm"
+                rows={2}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+                disabled={streaming}
+                data-testid="chat-input"
+              />
+              <div className="text-[10px] text-muted-foreground">
+                Desktop: Shift+Enter for new line • Mobile: Use ↵ button below
+              </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <Button
+                onClick={() => setInput(prev => prev + '\n')}
+                variant="outline"
+                className="h-[50%] px-2"
+                title="Add line break"
+              >
+                ↵
+              </Button>
+              <Button
+                onClick={() => handleSend()}
+                disabled={streaming || !input.trim()}
+                className="h-[50%] px-2"
+                data-testid="send-btn"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
