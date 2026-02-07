@@ -324,7 +324,7 @@ export default function ChatPage() {
         body: JSON.stringify({
           message: messageToSend,
           models: modelsToQuery,
-          conversation_id: conversationId
+          conversation_id: currentConvId
         })
       });
 
