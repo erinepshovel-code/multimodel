@@ -51,7 +51,7 @@ const getModelType = (model) => {
   return 'unknown';
 };
 
-const ResponsePanel = ({ model, messages, onFeedback, onCopy, onShare, onAudio, onToggleSelect, selectedMessages, isPaused, onTogglePause, messageIndexMap }) => {
+const ResponsePanel = ({ model, messages, onFeedback, onCopy, onShare, onAudio, onToggleSelect, selectedMessages, isPaused, onTogglePause, messageIndexMap, onSaveThread }) => {
   const scrollRef = useRef(null);
   const color = getModelColor(model);
   const modelType = getModelType(model);
