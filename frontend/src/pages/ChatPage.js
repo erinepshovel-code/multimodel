@@ -921,6 +921,7 @@ export default function ChatPage() {
                       isPaused={pausedModels[visibleModels[0]]}
                       onTogglePause={() => handleTogglePause(visibleModels[0])}
                       messageIndexMap={messageIndexMap}
+                      onSaveThread={handleSaveThread}
                     />
                   </Panel>
                   <PanelResizeHandle className="h-1 bg-border hover:bg-primary/50 transition-colors" />
@@ -937,6 +938,7 @@ export default function ChatPage() {
                       isPaused={pausedModels[visibleModels[1]]}
                       onTogglePause={() => handleTogglePause(visibleModels[1])}
                       messageIndexMap={messageIndexMap}
+                      onSaveThread={handleSaveThread}
                     />
                   </Panel>
                 </PanelGroup>
